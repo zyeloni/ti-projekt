@@ -9,6 +9,7 @@ Ranked.io wymaga [DOCKER](https://www.docker.com/).
 ```sh
 docker-compose up
 ```
+To wszystko docker zrobi za Ciebie resztę
 
 ## Autorzy
 
@@ -18,7 +19,12 @@ docker-compose up
 | 2. | Michał Mulik |
 | 3. | Sebastian Komuda |
 
-To wszystko docker zrobi za Ciebie resztę
+## Wykorzystane technologię
+
+- ngnix
+- php
+- js (vue.js + node)
+- java
 
 ## Wykorzystane obrazy
 
