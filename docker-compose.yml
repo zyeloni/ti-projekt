@@ -1,0 +1,70 @@
+version: "3.7"
+services: 
+    mysql:
+        container_name: rankedio_db
+        image: mysql:8.0
+        command: --default-authentication-plugin=mysql_native_password
+        restart: always
+        environment:
+            MYSQL_ROOT_PASSWORD: C~}9{mMQ
+            MYSQL_DATABASE: ranked.io
+        volumes: 
+            - ./sql-data:/var/lib/mysql
+        ports:
+            - '3307:3306'
+        healthcheck:
+            test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
+            timeout: 5s
+            retries: 2
+    frontend:
+        container_name: rankedio_frontend
+        restart: always
+        build: 
+            context: ./frontend
+            dockerfile: Dockerfile
+        volumes:
+            - './frontend/source:/app'
+            - '/app/node_modules'
+        ports:
+            - '8081:8080'
+        environment: 
+            - npm_config_unsafe_perm=true
+    minecraft:
+        container_name: rankedio_mc_srv
+        image: itzg/minecraft-server
+        ports: 
+            - 25565:25565
+        environment: 
+            EULA: 'TRUE'
+            TYPE: 'SPIGOT'
+            MEMORY: '1G'
+            MAX_PLAYERS: 10
+            MOTD: 'RANKED.IO - Serwer testowy'
+            OPS: 'Mustafo'
+        volumes: 
+            - ./minecraft-server:/data
+        stdin_open: true
+        restart: always
+    nginx:
+        image: nginx:stable-alpine
+        container_name: rankedio_nginx
+        ports:
+            - "8088:80"
+        volumes:
+            - ./backend:/var/www/html
+            - ./conf/nginx/default.conf:/etc/nginx/conf.d/default.conf
+        depends_on:
+            - mysql
+            - backend
+    backend:
+        container_name: rankedio_backend
+        build:
+            context: ./backend
+            dockerfile: Dockerfile
+        volumes:
+            - ./backend:/var/www/html
+networks: 
+    rankedio-network:
+        driver: bridge
+
+
