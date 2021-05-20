@@ -1,0 +1,17 @@
+name: Integration Test
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs: 
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Build image
+        run: docker-compose build
+      - name: Dunp logs
+        if: always()
+        run: docker-compose logs
