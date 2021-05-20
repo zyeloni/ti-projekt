@@ -1,3 +1,5 @@
+[![Integration Test](https://github.com/zyeloni/ti-projekt/actions/workflows/main.yml/badge.svg?branch=main)](https://github.com/zyeloni/ti-projekt/actions/workflows/main.yml)
+
 # RANKED.IO-APP
 
 ## Installation
