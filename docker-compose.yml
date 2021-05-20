@@ -1,5 +1,6 @@
 version: "3.7"
-services: 
+services:
+dasasdasdas
     mysql:
         container_name: rankedio_db
         image: mysql:8.0
