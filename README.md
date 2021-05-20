@@ -10,6 +10,14 @@ Ranked.io wymaga [DOCKER](https://www.docker.com/).
 docker-compose up
 ```
 
+## Autorzy
+
+| Lp | Imię i Nazwisko |
+| ------ | ------ |
+| 1. | Kacper Łukasik |
+| 2. | Michał Mulik |
+| 3. | Sebastian Komuda |
+
 To wszystko docker zrobi za Ciebie resztę
 
 ## Wykorzystane obrazy
