@@ -1,5 +1,4 @@
 version: "3.7"
-asdl;kasl;dkas;ldasl;kdla;sd
 services:
     mysql:
         container_name: rankedio_db
