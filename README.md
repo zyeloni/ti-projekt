@@ -32,7 +32,6 @@ To wszystko docker zrobi za Ciebie resztę
 
 ## Wykorzystane technologię
 
-- php
 - js (vue.js + node)
 - java
 
