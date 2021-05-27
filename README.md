@@ -9,6 +9,10 @@ Całość projektu będzie rozłożona ma mikroserwisy. Specyfikacja mikroserwis
 
 ![Komunikacja](./docs/komunikacja.png)
 
+Serwer gry (minecraft) komunikuję się z klientem (grą) poprzez porty TCP/UDP.
+Serwer frontendowy, backendowy komunikują się poprzez protokół HTTP.
+Klient aplikacji webowej komunikuje się poprzez protokół HTTP.
+
 ## Instalacja
 
 Ranked.io wymaga [DOCKER](https://www.docker.com/).
