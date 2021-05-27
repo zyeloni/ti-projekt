@@ -5,6 +5,10 @@
 Celem programu jest utworzenie rozwiązania chmurowego odpowiedzialnego za gromadzenie danych z serwera do gry minecraft. Dane przechowywane będa w bazie mysql (w przyszłości może postgresql).
 Całość projektu będzie rozłożona ma mikroserwisy. Specyfikacja mikroserwisów zostanie udostępniona za niegługo (powodem jest czesta zmiana koncepcji oraz usprawnienia, które mocno zmieniją całe podejście).
 
+## Komunikacja
+
+![Komunikacja](./docs/komunikacja.png)
+
 ## Instalacja
 
 Ranked.io wymaga [DOCKER](https://www.docker.com/).
@@ -24,7 +28,6 @@ To wszystko docker zrobi za Ciebie resztę
 
 ## Wykorzystane technologię
 
-- ngnix
 - php
 - js (vue.js + node)
 - java
@@ -42,10 +45,10 @@ Lista wykorzystanych obrazów z DOCKER HUB
 
 | FOLDER | OPIS |
 | ------ | ------ |
-| /backend | folder z aplikacją backendową |
+| /app | folder z aplikacją backendową |
 | /frontend | folder z aplikacją frontendową |
 | /minecraft-server | folder z serwerem do gry minecraft |
-| /sql-data | folder danych bazy sql |
+| /data | folder danych bazy sql |
 | /ranked-io-plugin | folder z kodem źródłowym pluginu do serwera minecraft |
 
 
