@@ -1,0 +1,21 @@
+{
+  "kind": "collectionType",
+  "collectionName": "players",
+  "info": {
+    "name": "Players"
+  },
+  "options": {
+    "increments": true,
+    "timestamps": true,
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "UUID": {
+      "type": "string"
+    },
+    "DisplayName": {
+      "type": "string"
+    }
+  }
+}
