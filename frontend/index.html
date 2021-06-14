@@ -73,6 +73,11 @@
                                         <td>{{ item.entityType }}</td>
                                         <td><u class="text-primary font-weight-bold">{{ item.total }}</u></td>
                                     </tr>
+                                    <tr v-if="stats.length != 0">
+                                        <td>#</td>
+                                        <td><u class="text-right text-right">Razem:</u></td>
+                                        <td><u class="text-danger">{{ getTotalEntityStats() }}</u></td>
+                                    </tr>
                                     <tr v-if="stats.length == 0">
                                         <td colspan="3">Brak danych</td>
                                     </tr>

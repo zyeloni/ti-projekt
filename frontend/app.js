@@ -64,8 +64,16 @@ var app = new Vue({
             }
 
             return null;
-        }
+        },
 
+        getTotalEntityStats: function() {
+            let vm = this;
+            var count = 0;
+            for (i = 0; i < vm.stats.length; i++) {
+                count += vm.stats[i].total;
+            }
+            return count;
+        },
     },
 
     filters: {
