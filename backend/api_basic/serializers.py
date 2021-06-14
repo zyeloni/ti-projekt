@@ -5,7 +5,7 @@ from .models import Players, EntityStats, BlockStats
 class PlayersSerializer(serializers.ModelSerializer):
     class Meta:
         model = Players
-        fields = ['id', 'uuid', 'displayName']
+        fields = ['id', 'uuid', 'displayName', 'createdAt']
 
 class EntityStatsSerializer(serializers.ModelSerializer):
     class Meta:
@@ -37,23 +37,23 @@ class BlockStatsSerializer(serializers.ModelSerializer):
         model = BlockStats
         fields = ['player', 'blockType']
 
-        def to_internal_value(self, data):
+    def to_internal_value(self, data):
+        try:
             try:
-                try:
-                    obj_id = data['player']
-                    return {
-                        'player': Players.objects.get(uuid=obj_id),
-                        'blockType': data['blockType']
-                    }
-                except KeyError:
-                    raise serializers.ValidationError(
-                        'id is a required field.'
-                    )
-                except ValueError:
-                    raise serializers.ValidationError(
-                        'id must be an integer.'
-                    )
-            except Players.DoesNotExist:
+                obj_id = data['player']
+                return {
+                    'player': Players.objects.get(uuid=obj_id),
+                    'blockType': data['blockType']
+                }
+            except KeyError:
                 raise serializers.ValidationError(
-                    'Obj does not exist.'
+                    'id is a required field.'
                 )
+            except ValueError:
+                raise serializers.ValidationError(
+                    'id must be an integer.'
+                )
+        except Players.DoesNotExist:
+            raise serializers.ValidationError(
+                'Obj does not exist.'
+            )

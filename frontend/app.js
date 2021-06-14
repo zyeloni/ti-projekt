@@ -1,13 +1,13 @@
 const API_URL = "http://localhost:1337";
 
-
 var app = new Vue({
     el: '#app',
 
     data: {
         players: [],
         stats: [],
-        accPlayer: { id: 1, uuid: "", displayName: "" },
+        blockTotal: 0,
+        accPlayer: { id: 1, uuid: "", displayName: "", createdAt: "" },
     },
 
     methods: {
@@ -25,7 +25,6 @@ var app = new Vue({
 
         fetchStats: function(uuid) {
             vm = this;
-            console.log(`${API_URL}/entitystats/${uuid}`);
             axios.get(`${API_URL}/entitystats/${uuid}`)
                 .then(function(response) {
                     vm.stats = JSON.parse(JSON.stringify(response.data));
@@ -34,7 +33,15 @@ var app = new Vue({
                 })
                 .catch(function(error) {
                     vm.stats = [];
+                });
+
+            axios.get(`${API_URL}/blockstats/${uuid}`)
+                .then(function(response) {
+                    vm.blockTotal = response.data[0].total;
                 })
+                .catch(function(error) {
+                    vm.blockTotal = 0;
+                });
         },
 
         findPlayerById: function(id) {
@@ -59,6 +66,14 @@ var app = new Vue({
             return null;
         }
 
+    },
+
+    filters: {
+        formatDate: function(value) {
+            if (value) {
+                return moment(String(value)).format('DD/MM/YYYY hh:mm')
+            }
+        }
     },
 
     mounted: function() {

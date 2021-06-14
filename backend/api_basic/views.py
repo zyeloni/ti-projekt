@@ -1,3 +1,4 @@
+from django.db.models.functions import Coalesce, Lower
 from rest_framework.parsers import JSONParser
 from .models import Players, EntityStats, BlockStats
 from .serializers import PlayersSerializer, EntityStatsSerializer, BlockStatsSerializer
@@ -26,7 +27,7 @@ def players_list(request):
 @api_view(['GET', 'POST'])
 def entity_state(request, uid):
     if request.method == 'GET':
-        res = EntityStats.objects.filter(player=uid).values('player', 'entityType').annotate(total = Count('entityType'))
+        res = EntityStats.objects.filter(player=uid).values('player', 'entityType').annotate(total = Count('entityType')).order_by('total').reverse()
         return Response(res)
     if request.method == 'POST':
         data = JSONParser().parse(request)
@@ -37,7 +38,7 @@ def entity_state(request, uid):
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-
+@api_view(['GET', 'POST'])
 def block_state(request, uid):
     if request.method == 'GET':
         res = BlockStats.objects.filter(player=uid).values('player').annotate(total = Count('blockType'))
