@@ -51,13 +51,6 @@ public class KillingEvent implements Listener {
 
         try (CloseableHttpClient httpClient = HttpClients.custom().setDefaultHeaders(headers).build();
              CloseableHttpResponse response = httpClient.execute(httpPost)) {
-            create(EntityUtils.toString(response.getEntity()));
         }
-    }
-
-    private void create(String content) throws IOException {
-        FileWriter myWriter = new FileWriter("index.html");
-        myWriter.write(content);
-        myWriter.close();
     }
 }

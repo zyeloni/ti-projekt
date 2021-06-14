@@ -3,14 +3,11 @@ services:
     frontend:
         container_name: rankedio_frontend
         restart: always
-        build: 
-            context: ./frontend
-            dockerfile: Dockerfile
+        image: nginx:1.21.0-alpine
         volumes:
-            - './frontend/source:/app'
-            - '/app/node_modules'
+            - './frontend:/usr/share/nginx/html'
         ports:
-            - '8081:8080'
+            - '8081:80'
         environment: 
             - npm_config_unsafe_perm=true
     minecraft:
@@ -30,21 +27,6 @@ services:
             - ./minecraft-server:/data
         stdin_open: true
         restart: always
-    # strapi:
-    #     image: strapi/strapi
-    #     environment:
-    #         DATABASE_CLIENT: postgres
-    #         DATABASE_NAME: strapi
-    #         DATABASE_HOST: postgres
-    #         DATABASE_PORT: 5432
-    #         DATABASE_USERNAME: strapi
-    #         DATABASE_PASSWORD: strapi
-    #     volumes:
-    #         - ./app:/srv/app
-    #     ports:
-    #         - '1337:1337'
-    #     depends_on:
-    #         - postgres
     postgres:
         image: postgres
         environment:

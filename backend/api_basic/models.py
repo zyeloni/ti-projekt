@@ -15,3 +15,10 @@ class EntityStats(models.Model):
 
     def __str__(self):
         return "EntityType {type} on Player: {uid}".format(uid=self.player, type=self.entityType)
+
+class BlockStats(models.Model):
+    blockType = models.CharField(max_length=30)
+    player = models.ForeignKey(Players, related_name='blockStats_on_Players', on_delete=models.CASCADE)
+
+    def __str__(self):
+        return "BlockType {type} on Player: {uid}".format(uid=self.player, type=self.blockType)

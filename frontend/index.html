@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="pl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ranked.io - statystyki</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
+</head>
+
+<body>
+
+    <div id="app">
+
+        <h1 class="text-center my-5">RANKED.IO</h1>
+
+        <div class="container text-center my-5">
+            <table class="table w-100">
+                <thead class="thead-dark">
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Avatar</th>
+                        <th scope="col">Nazwa gracza</th>
+                        <th scope="col"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="(item,index) in players">
+                        <th scope="row">{{ index+1 }}</th>
+                        <td><img v-bind:src="'https://crafatar.com/avatars/' + item.uuid + '?default=MHF_Steve&overlay'" alt="" width="32"></td>
+                        <td>{{ item.displayName }}</td>
+                        <td>
+                            <button class="btn btn-info" @click="fetchStats(item.id)"> 
+                                Zobacz statystyki
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+
+            <div id="statsModal" class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="statsModal" aria-hidden="true">
+                <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content">
+                        <div class="mt-5">
+                            <h1>Informacje o graczu:</h1>
+                            <p class="mt-5">
+                                <img v-bind:src="'https://crafatar.com/avatars/' + accPlayer.uuid + '?default=MHF_Steve&overlay'" alt="" width="128">
+                            </p>
+                            <h3 class="text-muted">{{ accPlayer.displayName }}</h3>
+
+                        </div>
+
+
+                        <div>
+                            <hr>
+                            <h4>Ilośc zabitych stworzeń</h4>
+                            <hr>
+                            <table class="table w-100">
+                                <thead class="thead-dark">
+                                    <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">Nazwa moba</th>
+                                        <th scope="col">Ilość zabójstw</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr v-for="(item,index) in stats">
+                                        <th scope="row">{{ index+1 }}</th>
+                                        <td>{{ item.entityType }}</td>
+                                        <td>{{ item.total }}</td>
+                                    </tr>
+                                    <tr v-if="stats.length == 0">
+                                        <td colspan="3">Brak danych</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="app.js"></script>
+</body>
+
+</html>
