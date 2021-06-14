@@ -1,0 +1,6 @@
+name: rankedio
+version: ${project.version}
+main: ranked.io.Rankedio
+api-version: 1.16
+authors: [ Rankedio ]
+description: Plugin do zarządzania statystykami dla serwera minecraft

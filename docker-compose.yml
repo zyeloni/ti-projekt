@@ -25,33 +25,47 @@ services:
             MAX_PLAYERS: 10
             MOTD: 'RANKED.IO - Serwer testowy'
             OPS: 'Mustafo'
+            VERSION: '1.16.5'
         volumes: 
             - ./minecraft-server:/data
         stdin_open: true
         restart: always
-    strapi:
-        image: strapi/strapi
-        environment:
-            DATABASE_CLIENT: postgres
-            DATABASE_NAME: strapi
-            DATABASE_HOST: postgres
-            DATABASE_PORT: 5432
-            DATABASE_USERNAME: strapi
-            DATABASE_PASSWORD: strapi
-        volumes:
-            - ./app:/srv/app
-        ports:
-            - '1337:1337'
-        depends_on:
-            - postgres
+    # strapi:
+    #     image: strapi/strapi
+    #     environment:
+    #         DATABASE_CLIENT: postgres
+    #         DATABASE_NAME: strapi
+    #         DATABASE_HOST: postgres
+    #         DATABASE_PORT: 5432
+    #         DATABASE_USERNAME: strapi
+    #         DATABASE_PASSWORD: strapi
+    #     volumes:
+    #         - ./app:/srv/app
+    #     ports:
+    #         - '1337:1337'
+    #     depends_on:
+    #         - postgres
     postgres:
         image: postgres
         environment:
-            POSTGRES_DB: strapi
-            POSTGRES_USER: strapi
-            POSTGRES_PASSWORD: strapi
+            POSTGRES_DB: backend_db
+            POSTGRES_USER: backend_db
+            POSTGRES_PASSWORD: backend_db
         volumes:
             - ./data:/var/lib/postgresql/data
+        ports:
+            - '5432:5432'
+    backend:
+        build: 
+            context: ./backend
+            dockerfile: Dockerfile
+        command: python manage.py runserver 0.0.0.0:1337
+        volumes:
+            - ./backend:/code
+        ports: 
+            - "1337:1337"
+        depends_on: 
+            - postgres
 networks: 
     rankedio-network:
         driver: bridge
