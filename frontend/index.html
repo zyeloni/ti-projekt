@@ -27,9 +27,8 @@
 
         <h4 class="text-center">Status serwera:
             <div id="status" class="d-inline">
-                <span v-if="serverStatus =='off'" class="text-danger">OFFLINE</span>
-                <span v-if="serverStatus =='on'" class="text-success">ONLINE</span>
-                <span v-if="serverStatus =='unchecked'" class="text-info">SPRAWDZAM</span>
+                <span v-if="serverStatus =='on'" class="badge rounded-pill bg-success">ONLINE</span>
+                <span v-if="serverStatus =='off'" class=" badge rounded-pill bg-danger ">OFFLINE</span>
             </div>
         </h4>
 

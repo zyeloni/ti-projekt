@@ -10,6 +10,8 @@ services:
             - '8081:80'
         environment: 
             - npm_config_unsafe_perm=true
+        networks:
+            - rankedio-network
     minecraft:
         container_name: rankedio_mc_srv
         image: itzg/minecraft-server
@@ -28,6 +30,8 @@ services:
             - ./minecraft-server:/data
         stdin_open: true
         restart: always
+        networks:
+            - rankedio-network
     postgres:
         restart: always
         image: postgres
@@ -39,6 +43,8 @@ services:
             - ./data:/var/lib/postgresql/data
         ports:
             - '5432:5432'
+        networks:
+            - rankedio-network
     backend:
         restart: always
         build: 
@@ -51,6 +57,8 @@ services:
             - "1337:1337"
         depends_on: 
             - postgres
+        networks:
+            - rankedio-network
 networks: 
     rankedio-network:
         driver: bridge
