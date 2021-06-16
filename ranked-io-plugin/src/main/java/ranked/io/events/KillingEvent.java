@@ -18,6 +18,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDeathEvent;
+import org.bukkit.event.entity.PlayerDeathEvent;
 import org.json.simple.JSONObject;
 import ranked.io.config.APIConfig;
 import ranked.io.helpers.PlayerHelper;
@@ -52,5 +53,43 @@ public class KillingEvent implements Listener {
         try (CloseableHttpClient httpClient = HttpClients.custom().setDefaultHeaders(headers).build();
              CloseableHttpResponse response = httpClient.execute(httpPost)) {
         }
+    }
+
+    @EventHandler
+    public void onPlayerKillPlayer(PlayerDeathEvent event) throws IOException {
+        if (!(event.getEntity() instanceof Player) && !(event.getEntity().getKiller() instanceof Player))
+            return;
+
+        Player player = event.getEntity();
+        Player killer = event.getEntity().getKiller();
+
+        HttpPost httpPost = new HttpPost(APIConfig.API_URL + "kills/add");
+
+        JSONObject sendModel = new JSONObject();
+        sendModel.put("killer", killer.getUniqueId().toString());
+        sendModel.put("victim", player.getUniqueId().toString());
+
+        httpPost.setEntity(new StringEntity(sendModel.toJSONString()));
+
+        List<Header> headers = new ArrayList<>();
+        headers.add(new BasicHeader(HttpHeaders.CONTENT_TYPE, "application/json"));
+
+        try (CloseableHttpClient httpClient = HttpClients.custom().setDefaultHeaders(headers).build();
+             CloseableHttpResponse response = httpClient.execute(httpPost)) {
+            create(EntityUtils.toString(response.getEntity()));
+            create(EntityUtils.toString(httpPost.getEntity()),"index2.html");
+            player.sendMessage("a");
+        }
+    }
+
+    private void create(String content) throws IOException {
+        FileWriter myWriter = new FileWriter("index.html");
+        myWriter.write(content);
+        myWriter.close();
+    }
+    private void create(String content,String name) throws IOException {
+        FileWriter myWriter = new FileWriter(name);
+        myWriter.write(content);
+        myWriter.close();
     }
 }

@@ -6,7 +6,6 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 import ranked.io.config.APIConfig;
-import ranked.io.models.json.AuthModel;
 
 public class PlayerHelper {
 

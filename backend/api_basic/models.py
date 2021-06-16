@@ -22,3 +22,11 @@ class BlockStats(models.Model):
 
     def __str__(self):
         return "BlockType {type} on Player: {uid}".format(uid=self.player, type=self.blockType)
+
+class KillStats(models.Model):
+    killer = models.ForeignKey(Players, related_name='killer_on_Players', on_delete=models.CASCADE)
+    victim = models.ForeignKey(Players, related_name='victim_on_Players', on_delete=models.CASCADE)
+    createdAt = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return "Killer {killer} on Player: {player}".format(player=self.victim, killer=self.killer)

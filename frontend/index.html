@@ -7,34 +7,78 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ranked.io - statystyki</title>
 
+    <link rel="icon" type="image/png" href="/favicon.ico" />
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="//cdn.datatables.net/1.10.25/css/jquery.dataTables.min.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.datatables.net/1.10.25/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous" />
 </head>
 
 <body>
 
-    <div id="app">
+    <div class="loading">Loading&#8230;</div>
 
-        <h1 class="text-center my-5">RANKED.IO</h1>
+    <div id="app" class="d-none">
+
+        <h1 class="text-center my-5"> <i class="fas fa-chart-bar text-info"></i> RANKED.IO</h1>
+
+        <h4 class="text-center">Status serwera:
+            <div id="status" class="d-inline">
+                <span v-if="serverStatus =='off'" class="text-danger">OFFLINE</span>
+                <span v-if="serverStatus =='on'" class="text-success">ONLINE</span>
+                <span v-if="serverStatus =='unchecked'" class="text-info">SPRAWDZAM</span>
+            </div>
+        </h4>
 
         <div class="container text-center my-5">
-            <table id="mainTable" class="table w-100">
-                <thead class="thead-dark">
+
+            <div v-if="serverStatus == 'on'">
+                <h5>Lista graczy online:</h5>
+                <div v-if="loggedPlayers.length != 0" class="col-md-12 d-flex my-5 d-inline-flex justify-content-center flex-wrap">
+                    <div v-for="item in loggedPlayers" class="mx-1">
+                        <div class="bigger d-flex justify-content-center flex-wrap flex-column" @click="fetchStats(getIdFromUuid(item.uuid))">
+                            <img v-bind:src="'https://crafatar.com/avatars/' + item.uuid + '?default=MHF_Steve&overlay'" alt="" width="64">
+                            <span class="mt-3">{{ item.displayName }}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="my-4" v-if="loggedPlayers.length == 0">
+                    Brak zalogowanych graczy
+                </div>
+            </div>
+
+            <table id="mainTable" class="table w-100 py-2">
+                <thead class="table-dark">
                     <tr>
                         <th scope="col">#</th>
                         <th scope="col">Avatar</th>
                         <th scope="col">Nazwa gracza</th>
+                        <th>Data dołączenia do serwera</th>
+                        <th>Zabite moby</th>
+                        <th>Zabójstwa</th>
+                        <th>Śmierci</th>
                         <th scope="col"></th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr v-for="(item,index) in players">
-                        <th scope="row">{{ index+1 }}</th>
-                        <td><img v-bind:src="'https://crafatar.com/avatars/' + item.uuid + '?default=MHF_Steve&overlay'" alt="" width="32"></td>
-                        <td>{{ item.displayName }}</td>
+                        <th scope="row">#</th>
                         <td>
-                            <button class="btn btn-info" @click="fetchStats(item.id)"> 
-                                Zobacz statystyki
+                            <img v-bind:src="'https://crafatar.com/avatars/' + item.uuid + '?default=MHF_Steve&overlay'" alt="" width="32">
+                            <span v-if="isOnline(item.uuid)" class="badge rounded-pill bg-success">ONLINE</span>
+                            <span v-if="!isOnline(item.uuid)" class=" badge rounded-pill bg-secondary ">OFFLINE</span>
+                        </td>
+                        <td>{{ item.displayName }}</td>
+                        <td>{{ item.createdAt | formatDate }}</td>
+                        <td>{{ getStatsTotal(item.id) }}</td>
+                        <td>{{ getKills(item.id) }}</td>
+                        <td>{{ getDeaths(item.id) }}</td>
+                        <td>
+                            <button class="btn btn-info text-dark" @click="fetchStats(item.id)"> 
+                                <i class="fas fa-chart-pie text-light"></i> Zobacz statystyki
                             </button>
                         </td>
                     </tr>
@@ -50,36 +94,83 @@
                             <p class="mt-5">
                                 <img v-bind:src="'https://crafatar.com/avatars/' + accPlayer.uuid + '?default=MHF_Steve&overlay'" alt="" width="128">
                             </p>
-                            <h3 class="text-muted">{{ accPlayer.displayName }}</h3>
-                            <p>Data dołączenia do serwera: <u class="text-primary font-weight-bold">{{ accPlayer.createdAt | formatDate }}</u></p>
+                            <span v-if="isOnline(accPlayer.uuid)" class="badge rounded-pill bg-success">ONLINE</span>
+                            <span v-if="!isOnline(accPlayer.uuid)" class=" badge rounded-pill bg-secondary ">OFFLINE</span>
+                            <h3 class="text-muted ">{{ accPlayer.displayName }}</h3>
+                            <p>Data dołączenia do serwera: <u class="text-primary font-weight-bold ">{{ accPlayer.createdAt | formatDate }}</u></p>
                         </div>
 
                         <div>
                             <hr>
-                            <h6>Ilośc wydobytych bloków: <u class="text-primary font-weight-bold">{{ blockTotal }}</u></h6>
+                            <h6>Ilośc wydobytych bloków: <u class="text-primary font-weight-bold ">{{ blockTotal }}</u></h6>
                             <hr>
                             <h4>Ilośc zabitych stworzeń</h4>
-                            <table class="table w-100">
-                                <thead class="thead-dark">
+                            <table class="table w-100 ">
+                                <thead class="thead-dark ">
                                     <tr>
-                                        <th scope="col">#</th>
-                                        <th scope="col">Nazwa moba</th>
-                                        <th scope="col">Ilość zabójstw</th>
+                                        <th scope="col ">#</th>
+                                        <th scope="col ">Nazwa moba</th>
+                                        <th scope="col ">Ilość zabójstw</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr v-for="(item,index) in stats">
-                                        <th scope="row">{{ index+1 }}</th>
+                                    <tr v-for="(item,index) in stats ">
+                                        <th scope="row ">{{ index+1 }}</th>
                                         <td>{{ item.entityType }}</td>
-                                        <td><u class="text-primary font-weight-bold">{{ item.total }}</u></td>
+                                        <td><u class="text-primary font-weight-bold ">{{ item.total }}</u></td>
                                     </tr>
-                                    <tr v-if="stats.length != 0">
+                                    <tr v-if="stats.length !=0 ">
                                         <td>#</td>
-                                        <td><u class="text-right text-right">Razem:</u></td>
-                                        <td><u class="text-danger">{{ getTotalEntityStats() }}</u></td>
+                                        <td><u class="text-right text-right ">Razem:</u></td>
+                                        <td><u class="text-danger ">{{ getTotalEntityStats() }}</u></td>
                                     </tr>
-                                    <tr v-if="stats.length == 0">
-                                        <td colspan="3">Brak danych</td>
+                                    <tr v-if="stats.length==0 ">
+                                        <td colspan="3 ">Brak danych</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <hr>
+                            <h4>Historia zabójstw</h4>
+                            <table class="table w-100 ">
+                                <thead class="thead-dark ">
+                                    <tr>
+                                        <th scope="col ">#</th>
+                                        <th></th>
+                                        <th scope="col ">Nazwa gracza</th>
+                                        <th scope="col ">Kiedy</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr v-for="(item,index) in killStats ">
+                                        <th scope="row ">{{ index+1 }}</th>
+                                        <td><img v-bind:src=" 'https://crafatar.com/avatars/' + item.victim.uuid + '?default=MHF_Steve&overlay' " alt=" " width="32 "></td>
+                                        <td>{{ item.victim.displayName }}</td>
+                                        <td><u class="text-primary font-weight-bold ">{{ item.createdAt | formatDate }}</u></td>
+                                    </tr>
+                                    <tr v-if="killStats.length==0 ">
+                                        <td colspan="4 ">Brak danych</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <h4>Historia Śmierci</h4>
+                            <table class="table w-100 ">
+                                <thead class="thead-dark ">
+                                    <tr>
+                                        <th scope="col ">#</th>
+                                        <th></th>
+                                        <th scope="col ">Nazwa gracza</th>
+                                        <th scope="col ">Kiedy</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr v-for="(item,index) in deathsStat ">
+                                        <th scope="row ">{{ index+1 }}</th>
+                                        <td><img v-bind:src=" 'https://crafatar.com/avatars/' + item.killer.uuid + '?default=MHF_Steve&overlay' " alt=" " width="32 "></td>
+                                        <td>{{ item.killer.displayName }}</td>
+                                        <td><u class="text-primary font-weight-bold ">{{ item.createdAt | formatDate }}</u></td>
+                                    </tr>
+                                    <tr v-if="deathsStat.length==0 ">
+                                        <td colspan="4 ">Brak danych</td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -89,16 +180,30 @@
                 </div>
             </div>
 
+
+            <h3 class="pt-5 mt-5 ">Ostatnie Śmierci</h3>
+
+            <div class="row mt-5 mb-5 ">
+                <div class="col-md-1 " v-for="item in lastKills " tabindex="0 ">
+                    <img @click="fetchStats(item.victim.id)" class="w-100 bigger " v-bind:src=" 'https://crafatar.com/avatars/' + item.victim.uuid + '?default=MHF_Steve&overlay' " alt=" " v-bind:data-tippy-content="item.victim.displayName + ' zabity przez: ' + item.killer.displayName
+                        + '<br>' + $options.filters.formatDate(item.createdAt) ">
+                </div>
+            </div>
         </div>
     </div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js" integrity="sha512-qTXRIMyZIFb8iQcfjXWCO8+M5Tbc38Qi5WzdPOYZHIlZpzBHG3L3by84BBBOiRGiEb7KKtAOAs5qYdUiZiQNNQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-    <script src="app.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js " integrity="sha512-qTXRIMyZIFb8iQcfjXWCO8+M5Tbc38Qi5WzdPOYZHIlZpzBHG3L3by84BBBOiRGiEb7KKtAOAs5qYdUiZiQNNQ==" crossorigin=" anonymous " referrerpolicy="no-referrer "></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.js " integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin=" anonymous "></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js " integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q " crossorigin="anonymous "></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js " integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl " crossorigin="anonymous "></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js "></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js "></script>
+    <script src="https://cdn.jsdelivr.net/gh/alfg/ping.js@0.2.2/dist/ping.min.js " type="text/javascript "></script>
+    <script src="https://unpkg.com/@popperjs/core@2/dist/umd/popper.min.js "></script>
+    <script src="https://unpkg.com/tippy.js@6/dist/tippy-bundle.umd.js "></script>
+    <script src="//cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js "></script>
+    <script src="animate.js "></script>
+    <script src="app.js "></script>
 </body>
 
 </html>

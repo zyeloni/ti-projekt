@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Players, EntityStats, BlockStats
+from .models import Players, EntityStats, BlockStats, KillStats
 
 
 class PlayersSerializer(serializers.ModelSerializer):
@@ -57,3 +57,31 @@ class BlockStatsSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError(
                 'Obj does not exist.'
             )
+
+class KillStatsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = KillStats
+        fields = ['killer', 'victim', 'createdAt']
+        depth = 1
+
+    def to_internal_value(self, data):
+        try:
+            try:
+                killer_id = data['killer']
+                victim_id = data['victim']
+                return {
+                    'killer': Players.objects.get(uuid=killer_id),
+                    'victim': Players.objects.get(uuid=victim_id)
+                }
+            except KeyError:
+                raise serializers.ValidationError(
+                    'id is a required field.'
+                )
+            except ValueError:
+                raise serializers.ValidationError(
+                    'id must be an integer.'
+                )
+        except Players.DoesNotExist:
+                raise serializers.ValidationError(
+                    'Obj does not exist.'
+                )
