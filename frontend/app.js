@@ -1,6 +1,6 @@
-const API_URL = "http://109.125.210.252:1337";
-const MC_HOST = "109.125.210.252:25565";
-const API_PLUGIN = "http://109.125.210.252:4567/v1"
+const API_URL = "http://localhost:1337";
+const MC_HOST = "localhost:25565";
+const API_PLUGIN = "http://localhost:4567/v1"
 
 var app = new Vue({
     el: '#app',
