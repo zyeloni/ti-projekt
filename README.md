@@ -137,6 +137,102 @@ curl -X GET /kills/<type:vitim|killer>/<uuid_gracza>
 ]
 ```
 
+```bash
+# dodaje do bazy danych historię zabójstwa
+curl -X POST \
+    --data '{"killer": <uuid_gracza>, "victim": <id_gracza>}' \
+    /kills/add
+# odpowiedź
+[
+    {
+        "killer": {
+            "id": 7,
+            "uuid": "b53006c8-2b25-4d21-8432-c8695412317c",
+            "displayName": "Mustafo",
+            "createdAt": "2021-06-14T00:31:46.317994Z"
+        },
+        "victim": {
+            "id": 40,
+            "uuid": "853c80ef3c3749fdaa49938b674adae6",
+            "displayName": "Paromix",
+            "createdAt": "2021-06-14T03:22:32.692442Z"
+        },
+        "createdAt": "2021-06-15T10:15:25.798740Z"
+    }
+]
+```
+
+```bash
+# zwraca cała historię zabójstw
+curl -X GET /kills
+# odpowiedź 
+[
+    {
+        "killer": 7,
+        "victim": 40
+    },
+    {
+        "killer": 40,
+        "victim": 7
+    },
+    {
+        "killer": 41,
+        "victim": 7
+    },
+    {
+        "killer": 41,
+        "victim": 7
+    }
+]
+```
+
+```bash
+# zwraca ostatnie 10 zabójstw
+curl -X GET /lastkills
+# odpowiedź 
+[
+    {
+        "killer": {
+            "id": 41,
+            "uuid": "7ed4ff84-1694-42d6-9b99-3530d207ccbc",
+            "displayName": "Shisuun",
+            "createdAt": "2021-06-15T16:41:09.189231Z"
+        },
+        "victim": {
+            "id": 7,
+            "uuid": "b53006c8-2b25-4d21-8432-c8695412317c",
+            "displayName": "Mustafo",
+            "createdAt": "2021-06-14T00:31:46.317994Z"
+        },
+        "createdAt": "2021-06-15T17:19:07.198219Z"
+    }
+]
+```
+
+```bash
+# zwraca wszystkie statystki dla wszystkich graczy
+curl -X GET /stats
+# odpowiedz
+[
+    {
+        "player": 44,
+        "total": 4
+    },
+    {
+        "player": 40,
+        "total": 1
+    },
+    {
+        "player": 41,
+        "total": 25
+    },
+    {
+        "player": 7,
+        "total": 33
+    }
+]
+```
+
 ## Komunikacja
 
 ![Komunikacja](./docs/komunikacja.png)
