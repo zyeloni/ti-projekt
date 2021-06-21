@@ -7,6 +7,136 @@ Całość projektu będzie rozłożona ma mikroserwisy.
 
 ## Specyfikacja mikroserwisów
 
+#### Domyślne hosty oraz porty kontenerów
+
+- frontend **( frontend:8081 )**
+- backend **( backend:1337 )**
+- postgres **( postgres:5432 )**
+- minecraft **( minecraft:25565 oraz minecraft:4567 )**
+
+#### Specyfikacja API - BACKEND
+
+API dostępne pod adressem http://backend:1337
+
+```bash
+# zwraca listę wszystkich graczy, którzy przynajmniej raz się zalogowali na serwer
+curl -X GET /players
+# odpowiedź
+[
+    {
+        "id": 7,
+        "uuid": "b53006c8-2b25-4d21-8432-c8695412317c",
+        "displayName": "Mustafo",
+        "createdAt": "2021-06-14T00:31:46.317994Z"
+    },
+    {
+        "id": 41,
+        "uuid": "7ed4ff84-1694-42d6-9b99-3530d207ccbc",
+        "displayName": "Shisuun",
+        "createdAt": "2021-06-15T16:41:09.189231Z"
+    },
+]
+
+```
+
+```bash
+# dodaje gracza do bazy graczy
+curl -X POST \
+    --data '{"uuid": "uuid_gracza", "displayName": "nazwa gracza"}' \
+    /players
+# odpowiedź
+{
+	"uuid": "asdasdasdasdasdasdasd",
+	"displayName": "alamakota"
+}
+```
+
+```bash
+# wyświetla statystki zabitych mobów dla podanego gracza 
+curl -X GET /entitystats/<id_gracza>
+# odpowiedź
+[
+    {
+        "player": 7,
+        "entityType": "Sheep",
+        "total": 11
+    },
+    {
+        "player": 7,
+        "entityType": "Pig",
+        "total": 9
+    },
+    {
+        "player": 7,
+        "entityType": "Cow",
+        "total": 4
+    },
+]
+```
+
+```bash
+# dodaje zabitego moba dla gracza
+curl -X POST \
+    --data '{"player": "uuid_gracza", "entityType": "entity_type"}' \
+    /entitystats/<id_gracza>
+# odpowiedź
+[
+    {
+        "player": 7,
+        "entityType": "Sheep",
+    },
+]
+```
+
+```bash
+# zwraca statysytki wydobytych bloków dla podanego gracza
+curl -X GET /blockstats/<uuid_gracza>
+# odpowiedź
+[
+    {
+        "player": 7,
+        "total": 202
+    }
+]
+```
+
+```bash
+# dodaje zabitego moba dla gracza
+curl -X POST \
+    --data '{"player": "uuid_gracza", "blockType": "block_type"}' \
+    /blockstats/<id_gracza>
+# odpowiedź
+[
+    {
+        "player": 7,
+        "blockType": "Stone",
+    },
+]
+```
+
+```bash
+# wyświetla informacje o zabójcy/ofierze
+curl -X GET /kills/<type:vitim|killer>/<uuid_gracza>
+# odpowiedz
+[
+    {
+        "killer": {
+            "id": 7,
+            "uuid": "b53006c8-2b25-4d21-8432-c8695412317c",
+            "displayName": "Mustafo",
+            "createdAt": "2021-06-14T00:31:46.317994Z"
+        },
+        "victim": {
+            "id": 40,
+            "uuid": "853c80ef3c3749fdaa49938b674adae6",
+            "displayName": "Paromix",
+            "createdAt": "2021-06-14T03:22:32.692442Z"
+        },
+        "createdAt": "2021-06-15T10:15:25.798740Z"
+    }
+]
+```
+
 ## Komunikacja
 
 ![Komunikacja](./docs/komunikacja.png)
