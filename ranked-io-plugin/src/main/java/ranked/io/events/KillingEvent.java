@@ -2,15 +2,12 @@ package ranked.io.events;
 
 import org.apache.http.Header;
 import org.apache.http.HttpHeaders;
-import org.apache.http.NameValuePair;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicHeader;
-import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
@@ -21,7 +18,6 @@ import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.json.simple.JSONObject;
 import ranked.io.config.APIConfig;
-import ranked.io.helpers.PlayerHelper;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -76,20 +72,6 @@ public class KillingEvent implements Listener {
 
         try (CloseableHttpClient httpClient = HttpClients.custom().setDefaultHeaders(headers).build();
              CloseableHttpResponse response = httpClient.execute(httpPost)) {
-            create(EntityUtils.toString(response.getEntity()));
-            create(EntityUtils.toString(httpPost.getEntity()),"index2.html");
-            player.sendMessage("a");
         }
-    }
-
-    private void create(String content) throws IOException {
-        FileWriter myWriter = new FileWriter("index.html");
-        myWriter.write(content);
-        myWriter.close();
-    }
-    private void create(String content,String name) throws IOException {
-        FileWriter myWriter = new FileWriter(name);
-        myWriter.write(content);
-        myWriter.close();
     }
 }

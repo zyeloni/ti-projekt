@@ -1,6 +1,14 @@
-[![Integration Test](https://github.com/zyeloni/ti-projekt/actions/workflows/main.yml/badge.svg?branch=main)](https://github.com/zyeloni/ti-projekt/actions/workflows/main.yml)
-
 # RANKED.IO-APP
+
+## Autorzy
+
+| Lp | Imię i Nazwisko |
+| ------ | ------ |
+| 1. | Kacper Łukasik |
+| 2. | Michał Mulik |
+| 3. | Sebastian Komuda |
+
+## Cel projektów
 
 Celem programu jest utworzenie rozwiązania chmurowego odpowiedzialnego za gromadzenie danych z serwera do gry minecraft. Dane przechowywane będa w bazie postgresql.
 Całość projektu będzie rozłożona ma mikroserwisy.
@@ -13,6 +21,13 @@ Całość projektu będzie rozłożona ma mikroserwisy.
 - backend **( backend:1337 )**
 - postgres **( postgres:5432 )**
 - minecraft **( minecraft:25565 oraz minecraft:4567 )**
+
+## Komunikacja
+
+![Komunikacja](./docs/komunikacja.png)
+
+Serwer gry (minecraft) komunikuję się z klientem (grą) poprzez porty **TCP/UDP** na porcie **25565**.
+Serwer frontendowy, backendowy komunikują się poprzez protokół **HTTP** po przez serwis **REST**.
 
 #### Specyfikacja API - BACKEND
 
@@ -233,13 +248,6 @@ curl -X GET /stats
 ]
 ```
 
-## Komunikacja
-
-![Komunikacja](./docs/komunikacja.png)
-
-Serwer gry (minecraft) komunikuję się z klientem (grą) poprzez porty **TCP/UDP** na porcie **25565**.
-Serwer frontendowy, backendowy komunikują się poprzez protokół **HTTP** po przez serwis **REST**.
-
 ## Instalacja
 
 Ranked.io wymaga **[DOCKER'a](https://www.docker.com/)**.
@@ -248,14 +256,6 @@ Ranked.io wymaga **[DOCKER'a](https://www.docker.com/)**.
 docker-compose up
 ```
 To wszystko docker zrobi za Ciebie resztę
-
-## Autorzy
-
-| Lp | Imię i Nazwisko |
-| ------ | ------ |
-| 1. | Kacper Łukasik |
-| 2. | Michał Mulik |
-| 3. | Sebastian Komuda |
 
 ## Wykorzystane technologię
 

@@ -1,6 +1,6 @@
 const API_URL = "http://localhost:1337";
+const API_URL_2 = "http://localhost:4567/v1"
 const MC_HOST = "localhost:25565";
-const API_PLUGIN = "http://localhost:4567/v1"
 
 var app = new Vue({
     el: '#app',
@@ -159,7 +159,7 @@ var app = new Vue({
 
         fetchLoggedPlayers: function() {
             let vm = this;
-            axios.get(`${API_PLUGIN}/players`)
+            axios.get(`${API_URL_2}/players`)
                 .then(function(response) {
                     vm.loggedPlayers = JSON.parse(JSON.stringify(response.data));
                     vm.serverStatus = 'on';
