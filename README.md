@@ -289,7 +289,3 @@ Lista wykorzystanych obrazów z DOCKER HUB
 ![SS1](./docs/ss1.jpg)
 ![SS2](./docs/ss2.jpg)
 ![SS3](./docs/ss3.jpg)
-
-## Licencja
-
-MIT
