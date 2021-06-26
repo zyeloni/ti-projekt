@@ -1,5 +1,5 @@
 version: "3.7"
-services:
+services:hahahahaha
     frontend:
         container_name: rankedio_frontend
         restart: always
